@@ -410,7 +410,7 @@ def split(split_start, label, cov, pred_length):
 """Single step training dataloader for the electricity dataset"""
 class electTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy'), allow_pickle=True))
 
         # Resample windows according to the average amplitude
         v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
@@ -419,7 +419,7 @@ class electTrainDataset(Dataset):
         sample_index = torch.multinomial(weights, num_samples, True)
         self.data = self.data[sample_index]
 
-        self.label = torch.from_numpy(np.load(os.path.join(data_path, f'train_label_{data_name}.npy')), allow_pickle=True)
+        self.label = torch.from_numpy(np.load(os.path.join(data_path, f'train_label_{data_name}.npy'), allow_pickle=True))
         self.label = self.label[sample_index]
 
         self.train_len = len(self.data) // batch_size
@@ -484,7 +484,7 @@ class electTestDataset(Dataset):
 """Single step training dataloader for the app flow dataset"""
 class flowTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy'), allow_pickle=True))
 
         # Resample windows according to the average amplitude
         v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
@@ -554,7 +554,7 @@ class flowTestDataset(Dataset):
 """Single step training dataloader for the wind dataset"""
 class windTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy'), allow_pickle=True))
 
         # Resample windows according to the average amplitude
         v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
