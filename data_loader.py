@@ -241,7 +241,7 @@ class Dataset_Synthetic(Dataset):
         self.root_path = root_path
         self.data_path = data_path
         preprocess_path = os.path.join(self.root_path, self.data_path)
-        self.all_data =np.load(preprocess_path)
+        self.all_data =np.load(preprocess_path, allow_pickle=True)
         self.all_data = torch.from_numpy(self.all_data)
         self.all_data, self.covariates = self.all_data[:, :, 0], self.all_data[:, :, 1:]
         self.seq_num = self.all_data.size(0)
@@ -410,16 +410,16 @@ def split(split_start, label, cov, pred_length):
 """Single step training dataloader for the electricity dataset"""
 class electTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')))
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
 
         # Resample windows according to the average amplitude
-        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'))
+        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
         weights = torch.as_tensor(np.abs(v[:,0])/np.sum(np.abs(v[:,0])), dtype=torch.double)
         num_samples = weights.size(0)
         sample_index = torch.multinomial(weights, num_samples, True)
         self.data = self.data[sample_index]
 
-        self.label = torch.from_numpy(np.load(os.path.join(data_path, f'train_label_{data_name}.npy')))
+        self.label = torch.from_numpy(np.load(os.path.join(data_path, f'train_label_{data_name}.npy')), allow_pickle=True)
         self.label = self.label[sample_index]
 
         self.train_len = len(self.data) // batch_size
@@ -448,9 +448,9 @@ class electTrainDataset(Dataset):
 """Single step testing dataloader for the electricity dataset"""
 class electTestDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length):
-        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'))
-        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'))
-        self.label = np.load(os.path.join(data_path, f'test_label_{data_name}.npy'))
+        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'), allow_pickle=True)
+        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'), allow_pickle=True)
+        self.label = np.load(os.path.join(data_path, f'test_label_{data_name}.npy'), allow_pickle=True)
         self.test_len = self.data.shape[0]
         self.pred_length = predict_length
 
@@ -484,10 +484,10 @@ class electTestDataset(Dataset):
 """Single step training dataloader for the app flow dataset"""
 class flowTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')))
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
 
         # Resample windows according to the average amplitude
-        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'))
+        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
         weights = torch.as_tensor(np.abs(v)/np.sum(np.abs(v)), dtype=torch.double)
         num_samples = weights.size(0)
         sample_index = torch.multinomial(weights, num_samples, True)
@@ -521,8 +521,8 @@ class flowTrainDataset(Dataset):
 """Single step testing dataloader for the all flow dataset"""
 class flowTestDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length):
-        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'))
-        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'))
+        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'), allow_pickle=True)
+        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'), allow_pickle=True)
         self.label = self.data
         self.test_len = self.data.shape[0]
         self.pred_length = predict_length
@@ -554,10 +554,10 @@ class flowTestDataset(Dataset):
 """Single step training dataloader for the wind dataset"""
 class windTrainDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length, batch_size):
-        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')))
+        self.data = torch.from_numpy(np.load(os.path.join(data_path, f'train_data_{data_name}.npy')), allow_pickle=True)
 
         # Resample windows according to the average amplitude
-        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'))
+        v = np.load(os.path.join(data_path, f'train_v_{data_name}.npy'), allow_pickle=True)
         weights = torch.as_tensor(np.abs(v)/np.sum(np.abs(v)), dtype=torch.double)
         num_samples = weights.size(0)
         sample_index = torch.multinomial(weights, num_samples, True)
@@ -588,8 +588,8 @@ class windTrainDataset(Dataset):
 """Single step testing dataloader for the wind dataset"""
 class windTestDataset(Dataset):
     def __init__(self, data_path, data_name, predict_length):
-        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'))
-        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'))
+        self.data = np.load(os.path.join(data_path, f'test_data_{data_name}.npy'), allow_pickle=True)
+        self.v = np.load(os.path.join(data_path, f'test_v_{data_name}.npy'), allow_pickle=True)
         self.test_len = self.data.shape[0]
         self.pred_length = predict_length
 
